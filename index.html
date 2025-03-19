@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+        <link rel="stylesheet" href="style.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <script src="script.js"></script>
+        <title>My Portfolio</title>
+       
+    </head>
+    <body>
+        <div class="profile-container">
+       
+        </div>
+        <header>
+        <nav class="navbar">
+            <button class="nav-button" onclick="location.reload()">Home</button>
+            <button class="nav-button" onclick="showAbout()">About</button>
+            <button class="nav-button" onclick="showEducation()">Educational Background</button>
+            <button class="nav-button">Work Experience</button>
+            <button class="nav-button" onclick=" showSkills()">Skills</button>
+            <button class="nav-button">Contact</button>
+        </nav>
+    </header>
+    </div>
+    <div class="top-left-text">Ab Danie Manalundong</div>
+        <div id="about-container" class="about-container"></div>
+        <div id="skills-choice-container" class="skills-choice-container">
+            <button class="choice-button" onclick="showProgrammingSkills()">Programming Skills</button>
+            <button class="choice-button" onclick="showGraphicDesignSkills()">Graphic Design Skills</button>
+        </div>
+        
+    <div id="skills-container" class="skills-container" style="display: none;">
+        <div class="skill-box"><img class="skill-icon" src="logos/html.png" alt="HTML" onclick="showDescription('This is my favorite programming language.')"></div>
+            <img class="skill-icon" src="logos/js.png" alt="CSS" onclick="showDescription('CSS is my styling tool of choice.')">
+            <img class="skill-icon" src="logos/python.png" alt="JavaScript" onclick="showDescription('JavaScript brings my projects to life!')">
+            <img class="skill-icon" src="logos/php.png" alt="React" onclick="showDescription('React helps build dynamic UIs!')">
+            <img class="skill-icon" src="logos/java.png" alt="Node.js" onclick="showDescription('Node.js powers my backend development!')">
+        </div>
+       
+        <div id="education-container" class="education-container">
+            <span class="text" id="text"></span>
+        </div>
+        <div class="clock">
+            <div class="hand hour" id="hour-hand"></div>
+            <div class="hand minute" id="minute-hand"></div>
+            <div class="hand second" id="second-hand"></div>
+            <div class="number" id="numbers"></div>
+        </div>
+        <div class="digital-clock" id="digital-clock"></div>
+        <script>
+            function updateClock() {
+            let now = new Date();
+            let utc = now.getTime() + now.getTimezoneOffset() * 60000;
+            let philTime = new Date(utc + 3600000 * 8); // Convert to UTC+8 (Philippines Time)
+
+            let hours = philTime.getHours();
+            let minutes = philTime.getMinutes();
+            let seconds = philTime.getSeconds();
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12;
+            
+            let hourDeg = (hours * 30) + (minutes * 0.5);
+            let minuteDeg = (minutes * 6) + (seconds * 0.1);
+            let secondDeg = seconds * 6;
+            
+            document.getElementById('hour-hand').style.transform = `translateX(-50%) rotate(${hourDeg}deg)`;
+            document.getElementById('minute-hand').style.transform = `translateX(-50%) rotate(${minuteDeg}deg)`;
+            document.getElementById('second-hand').style.transform = `translateX(-50%) rotate(${secondDeg}deg)`;
+            
+            highlightNumber(hours, minutes);
+            updateDigitalClock(hours, minutes, seconds, ampm);
+        }
+        
+        function addNumbers() {
+            const numbers = document.getElementById('numbers');
+            for (let i = 1; i <= 12; i++) {
+                let angle = (i * 30) * (Math.PI / 180);
+                let x = 50 + 40 * Math.sin(angle);
+                let y = 50 - 40 * Math.cos(angle);
+                let numDiv = document.createElement('div');
+                numDiv.innerText = i;
+                numDiv.id = `num-${i}`;
+                numDiv.style.left = `${x}%`;
+                numDiv.style.top = `${y}%`;
+                numbers.appendChild(numDiv);
+            }
+        }
+        
+        function highlightNumber(hours, minutes) {
+            document.querySelectorAll('.number div').forEach(num => num.classList.remove('highlight'));
+            let hourNum = document.getElementById(`num-${hours || 12}`);
+            let minuteNum = document.getElementById(`num-${Math.round(minutes / 5) || 12}`);
+            if (hourNum) hourNum.classList.add('highlight');
+            if (minuteNum) minuteNum.classList.add('highlight');
+        }
+        
+        function updateDigitalClock(hours, minutes, seconds, ampm) {
+            let formattedTime = `${hours.toString().padStart(2, '0')} : ${minutes.toString().padStart(2, '0')} : ${seconds.toString().padStart(2, '0')} ${ampm}`;
+            document.getElementById('digital-clock').textContent = formattedTime;
+        }
+        
+        addNumbers();
+        setInterval(updateClock, 1000);
+        updateClock();
+        </script>
+    </body>
+    </html>
